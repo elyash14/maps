@@ -1,14 +1,31 @@
-require('@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css')
-var mapboxgl = require('mapbox-gl');
+// require('@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css');
+import Application from "./js/application";
 
+const initialZones = [
+  {
+    title: "T1",
+    feature: {
+      type: "Polygon",
+      coordinates: [
+        [
+          [49.602045, 37.27071],
+          [49.604051, 37.26977],
+          [49.605388, 37.270784],
+          [49.603826, 37.273876],
+          [49.599686, 37.272882],
+          [49.600168, 37.272081],
+          [49.601023, 37.271366],
+          [49.602045, 37.27071]
+        ]
+      ]
+    }
+  }
+];
 
-mapboxgl.accessToken =
-  "pk.eyJ1Ijoic21zYWVpZDY0IiwiYSI6ImNrNzdkbGc3dzAwaDQzbG52aXJ3OWE4cTgifQ.ROB6bd_fVWlA2pbyNeNLEQ";
+const app = new Application('map', initialZones);
 
-var map = new mapboxgl.Map({
-  container: "map", // container id
-  style: "mapbox://styles/mapbox/streets-v11", //hosted style id
-  center: [49.602045, 37.27071], // starting position
-  zoom: 14 // starting zoom
-});
+const showBtn = document.querySelector("#show-zones");
+showBtn.onclick = () => app.render('show');
 
+const hideBtn = document.querySelector("#hide-zones");
+hideBtn.onclick = () => app.render('hide');
