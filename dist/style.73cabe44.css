@@ -24,7 +24,7 @@ body {
 }
 
 #tool-bars {
-  background: purple;
+  background: #4cb9ec;
 }
 #tool-bars button {
   background: transparent;
@@ -35,7 +35,8 @@ body {
   margin: 0;
 }
 #tool-bars button:hover {
-  background-color: #740374;
+  cursor: pointer;
+  background-color: #247da7;
 }
 
 /*# sourceMappingURL=/style.73cabe44.css.map */

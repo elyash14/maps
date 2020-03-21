@@ -1,6 +1,7 @@
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from "@turf/turf";
+import swal from "sweetalert";
 
 const Application = class {
   container = null;
@@ -42,6 +43,9 @@ const Application = class {
       }
     });
     this.map.addControl(this.draw);
+    const self = this;
+    this.map.on("draw.create", self._updateDraw.bind(this));
+    this.map.on("draw.update", self._updateDraw.bind(this));
   };
 
   render = (mode = "show") => {
@@ -55,11 +59,31 @@ const Application = class {
   };
 
   toggleDraw = () => {
-    if(this.draw){
+    if (this.draw) {
       this.map.removeControl(this.draw);
       this.draw = null;
-    }else{
+    } else {
       this._initialTools();
+    }
+  };
+
+  _updateDraw = e => {
+    const data = this.draw.getAll();
+
+    if (data.features.length > 0) {
+      const self = this;
+      // get a name as the zone title
+      swal("Enter a title for new zone:", {
+        content: "input"
+      }).then(value => {
+        const new_zone = {
+          title: value,
+          feature: data.features[0].geometry
+        };
+        self.zones.push(new_zone);
+        self.draw.deleteAll();
+        self.render("show");
+      });
     }
   };
 
@@ -107,8 +131,8 @@ const Application = class {
       source: "zones-source",
       filter: ["==", "geoType", "polygon"],
       paint: {
-        "fill-color": "rgba(200, 100, 240, 0.4)",
-        "fill-outline-color": "rgba(200, 100, 240, 1)"
+        "fill-color": "rgba(76, 185, 236, 0.5)",
+        "fill-outline-color": "rgba(36, 125, 167, 1)"
       }
     });
 
