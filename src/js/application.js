@@ -1,18 +1,20 @@
 import mapboxgl from "mapbox-gl";
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from "@turf/turf";
 
 const Application = class {
   container = null;
   zones = null;
   map = null;
+  draw = null;
 
   constructor(container, zones = []) {
     this.container = container;
     this.zones = zones;
-    this.initialMap();
+    this._initialMap();
   }
 
-  initialMap = () => {
+  _initialMap = () => {
     mapboxgl.accessToken =
       "pk.eyJ1Ijoic21zYWVpZDY0IiwiYSI6ImNrNzdkbGc3dzAwaDQzbG52aXJ3OWE4cTgifQ.ROB6bd_fVWlA2pbyNeNLEQ";
 
@@ -26,8 +28,20 @@ const Application = class {
     // show initial zones
     const self = this;
     this.map.on("load", function() {
+      self._initialTools();
       self.render();
     });
+  };
+
+  _initialTools = () => {
+    this.draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true
+      }
+    });
+    this.map.addControl(this.draw);
   };
 
   render = (mode = "show") => {
@@ -37,6 +51,15 @@ const Application = class {
         this.zones
       );
       this._renderZonesOnMap(featureCollection);
+    }
+  };
+
+  toggleDraw = () => {
+    if(this.draw){
+      this.map.removeControl(this.draw);
+      this.draw = null;
+    }else{
+      this._initialTools();
     }
   };
 
@@ -106,13 +129,13 @@ const Application = class {
     this.map.fitBounds(boxToBox, { padding: 150 });
   };
 
-  _removeFeatureCollection= ()=>{
-    if(this.map.getSource('zones-source')){
-        this.map.removeLayer('zones-layer');
-        this.map.removeLayer('zones-point');
-        this.map.removeSource('zones-source');
+  _removeFeatureCollection = () => {
+    if (this.map.getSource("zones-source")) {
+      this.map.removeLayer("zones-layer");
+      this.map.removeLayer("zones-point");
+      this.map.removeSource("zones-source");
     }
-  }
+  };
 };
 
 export default Application;

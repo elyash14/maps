@@ -1,4 +1,6 @@
-// require('@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css');
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
 import Application from "./js/application";
 
 const initialZones = [
@@ -29,3 +31,6 @@ showBtn.onclick = () => app.render('show');
 
 const hideBtn = document.querySelector("#hide-zones");
 hideBtn.onclick = () => app.render('hide');
+
+const drawBtn = document.querySelector("#draw");
+drawBtn.onclick = () => app.toggleDraw();
