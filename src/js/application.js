@@ -76,9 +76,14 @@ const Application = class {
       swal("Enter a title for new zone:", {
         content: "input"
       }).then(value => {
+        const feature = data.features[0].geometry;
+        self.zones.forEach(function(zone) {
+          const temp = turf.difference(feature, zone.feature);
+          feature.coordinates = temp.geometry.coordinates;
+        });
         const new_zone = {
           title: value,
-          feature: data.features[0].geometry
+          feature: feature
         };
         self.zones.push(new_zone);
         self.draw.deleteAll();
